@@ -9,7 +9,7 @@
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
         th { background: #f4f4f4; }
-        img { width: 50px; }
+        img { width: 150px; height: auto; }
         .filters { margin-bottom: 20px; }
     </style>
 </head>
@@ -53,18 +53,57 @@
     </table>
 
     <script>
-        const exams = [{'date': '1740034456715', 'title': 'Ball', 'name': 'TANVISHA', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/Ball8.jpg', 'admission': '4966', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'Bracelet', 'name': 'KALYAN', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/Bracelet4.jpg', 'admission': '5013', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'ChristmasTree', 'name': 'N SINDUJA', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/ChristmasTree9.jpg', 'admission': '5372', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'Cup', 'name': 'NUNEMUNTHALA SRAVAN KUMAR', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/Cup14a.jpg', 'admission': '5023', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'Cup', 'name': 'TANVISHA', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/Cup14b.jpg', 'admission': '4966', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'Dice', 'name': 'NUNEMUNTHALA SRAVAN KUMAR', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/Dice1b.jpg', 'admission': '5023', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'House', 'name': 'N SINDUJA', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/House13.jpg', 'admission': '5372', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'Keychain', 'name': 'SRINIVAS', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/Keychain19b.jpg', 'admission': '4989', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'Keychain', 'name': 'NUNEMUNTHALA SRAVAN KUMAR', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/Keychain19c.jpg', 'admission': '5023', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'Locket', 'name': 'TANVISHA', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/Locket5.jpg', 'admission': '4966', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'PenStand', 'name': 'TANVISHA', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/PenStand2.jpg', 'admission': '4966', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'Ring', 'name': 'RATHNAVATH SENA', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/Ring3b.jpg', 'admission': '5021', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'Rocket', 'name': 'CHAVAN KIRAN KUMAR', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/Rocket18a.jpg', 'admission': '3527', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'Sofacouch', 'name': 'KALYAN', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/Sofacouch15.jpg', 'admission': '5013', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'Swing', 'name': 'N SINDUJA', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/Swing17b.jpg', 'admission': '5372', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'TableandChair', 'name': 'ATTILI TEJA SRI VENKATA SWARUP', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/TableandChair22.jpg', 'admission': '4987', 'class': '9', 'youtube': 'NA'}, {'date': '1740034456715', 'title': 'Windmill', 'name': 'RATHNAVATH SENA', 'image': 'https://textbookpdf.s3.ap-south-1.amazonaws.com/electron_browser_assets/images3d/Windmill25.jpg', 'admission': '5021', 'class': '9', 'youtube': 'NA'}];
+        let exams = [];
+
+        async function fetchExamsData() {
+            try {
+                console.log("Fetching data...");
+                const response = await fetch("https://pragament.github.io/electron_browser_output/electron_output.json?t=" + new Date().getTime());
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const text = await response.text(); 
+                console.log("Raw response text:", text);
+
+                try {
+                    exams = JSON.parse(text);
+                } catch (error) {
+                    throw new Error("Invalid JSON format: " + error.message);
+                }
+
+                console.log("Fetched exams data:", exams);
+                
+                if (!Array.isArray(exams) || exams.length === 0) {
+                    console.error("Error: No data found in JSON.");
+                    return;
+                }
+
+                loadExams();
+            } catch (error) {
+                console.error("Error fetching exams data:", error);
+            }
+        }
 
         function loadExams() {
-            populateFilter("dateFilter", [...new Set(exams.map(e => e.date))]);
-            populateFilter("admissionFilter", [...new Set(exams.map(e => e.admission))]);
-            populateFilter("classFilter", [...new Set(exams.map(e => e.class))]);
-            populateFilter("nameFilter", [...new Set(exams.map(e => e.name))]);
+            if (!Array.isArray(exams) || exams.length === 0) {
+                console.error("Error: No data to load.");
+                return;
+            }
+
+            console.log("Loading exams...");
+            populateFilter("dateFilter", [...new Set(exams.map(e => e.date).filter(Boolean))]);
+            populateFilter("admissionFilter", [...new Set(exams.map(e => e.admission).filter(Boolean))]);
+            populateFilter("classFilter", [...new Set(exams.map(e => e.class).filter(Boolean))]);
+            populateFilter("nameFilter", [...new Set(exams.map(e => e.name).filter(Boolean))]);
+
             renderTable(exams);
         }
 
         function populateFilter(filterId, values) {
             const filter = document.getElementById(filterId);
+            filter.innerHTML = `<option value="">All</option>`; 
             values.forEach(value => {
                 let option = document.createElement("option");
                 option.value = value;
@@ -74,24 +113,27 @@
         }
 
         function renderTable(filteredExams) {
-    const examTable = document.getElementById("examTable");
-    examTable.innerHTML = ""; // Clear existing rows
+            console.log("Rendering table...");
+            const examTable = document.getElementById("examTable");
+            examTable.innerHTML = ""; 
 
-    filteredExams.forEach(exam => {
-        let row = `<tr>
-            <td>${exam.title}</td>
-            <td>${exam.name}</td>
-            <td><img src="${exam.image}" alt="${exam.title}" style="width: 150px; height: auto;"></td>
-            <td><iframe width="200" height="150" src="${exam.youtube}" frameborder="0" allowfullscreen></iframe></td>
-            <td>${exam.admission}</td>
-            <td>${exam.class}</td>
-        </tr>`;
-        examTable.innerHTML += row;
-    });
-}
+            filteredExams.forEach(exam => {
+                let row = `<tr>
+                    <td>${exam.title || "N/A"}</td>
+                    <td>${exam.name || "N/A"}</td>
+                    <td>${exam.image ? `<img src="${exam.image}" alt="${exam.title}">` : "No Image"}</td>
+                    <td>${exam.youtube !== "NA" ? `<iframe width="200" height="150" src="${exam.youtube}" frameborder="0" allowfullscreen></iframe>` : "No Video"}</td>
+                    <td>${exam.admission || "N/A"}</td>
+                    <td>${exam.class || "N/A"}</td>
+                </tr>`;
+                examTable.innerHTML += row;
+            });
 
+            console.log("Table rendered successfully.");
+        }
 
         function filterExams() {
+            console.log("Filtering exams...");
             const selectedDate = document.getElementById("dateFilter").value;
             const selectedAdmission = document.getElementById("admissionFilter").value;
             const selectedClass = document.getElementById("classFilter").value;
@@ -104,11 +146,11 @@
                 (selectedName === "" || exam.name === selectedName)
             );
 
+            console.log("Filtered exams:", filteredExams);
             renderTable(filteredExams);
         }
 
-        // Load data on page load
-        window.onload = loadExams;
+        window.onload = fetchExamsData;
     </script>
 </body>
 </html>
